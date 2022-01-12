@@ -1,5 +1,5 @@
 const settings = {
-  name: "CKPA-Chauny",
+  name: "CKPA_Chauny",
   state: {
     frontity: {
       url: "https://CKPA-Chauny.fr",
@@ -9,7 +9,7 @@ const settings = {
   },
   packages: [
     {
-      name: "CKPA-Chauny",
+      name: "CKPA_Chauny",
       state: {
         theme: {
           menu: [],

@@ -1,5 +1,5 @@
 {
-  "name": "CKPA-theme",
+  "name": "frontity-theme",
   "version": "1.0.0",
   "private": true,
   "description": "Frontity project",
@@ -21,13 +21,11 @@
     "@frontity/core": "^1.14.3",
     "@frontity/head-tags": "^1.1.1",
     "@frontity/html2react": "^1.7.0",
-    "@frontity/mars-theme": "./packages/mars-theme",
     "@frontity/tiny-router": "^1.4.4",
     "@frontity/wp-source": "^1.11.7",
-    "CKPA-Chauny": "file:packages/CKPA-Chauny",
+    "CKPA-Chauny": "file:packages/CKPA_Chauny",
     "dayjs": "^1.10.7",
     "frontity": "^1.17.1",
-    "my-first-theme": "file:packages/my-first-theme",
     "react-icons": "^4.3.1",
     "react-spring": "^8"
   }
