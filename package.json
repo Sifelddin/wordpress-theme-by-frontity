@@ -23,7 +23,7 @@
     "@frontity/html2react": "^1.7.0",
     "@frontity/tiny-router": "^1.4.4",
     "@frontity/wp-source": "^1.11.7",
-    "CKPA-Chauny": "file:packages/CKPA_Chauny",
+    "CKPA_Chauny": "file:packages/CKPA_Chauny",
     "dayjs": "^1.10.7",
     "frontity": "^1.17.1",
     "react-icons": "^4.3.1",

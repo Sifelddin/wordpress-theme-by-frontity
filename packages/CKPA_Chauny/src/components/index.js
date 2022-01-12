@@ -13,8 +13,8 @@ import Footer from "./Footer";
 import CatPost from "./catPost";
 import SearchBar from "./SearchBar";
 import { useTransition, animated } from "react-spring";
-import Dropmenu from "./Dropmenu";
 import Title from "./title";
+import CatList from "./catList";
 
 //import fetch from "cross-fetch";
 
@@ -88,18 +88,7 @@ const Root = ({ state }) => {
                 onClick={handleSearchBarClick}
               />
               {data.isArchive && (
-                <DropDown
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleshowDropMenu();
-                  }}
-                >
-                  <FaOutdent className="list-icon" onClick={handleListClick} />
-                  <Dropmenu
-                    showDropList={showDropMenu}
-                    showNavBar={showNavBar}
-                  />
-                </DropDown>
+                <FaOutdent className="list-icon" onClick={handleListClick} />
               )}
             </Icons>
           </NavBar>
@@ -112,6 +101,13 @@ const Root = ({ state }) => {
               <Banner Data={data} showSideBar={showSideBarList}>
                 <h1>CANOË KAYAK PLEIN AIR</h1>
                 <p>Ouvert toute l'année</p>
+                {data.isArchive && (
+                  <CatList
+                    handleshowDropMenu={handleshowDropMenu}
+                    showNavBar={showNavBar}
+                    showCaegories={showDropMenu}
+                  />
+                )}
               </Banner>
               <Switch>
                 <CatPost
@@ -197,9 +193,6 @@ const NavBar = styled.div`
   }
 `;
 
-const DropDown = styled.div`
-  position: relative;
-`;
 const Main = styled.main`
   max-width: ${({ Data }) =>
     Data.isPost
