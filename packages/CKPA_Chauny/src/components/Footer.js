@@ -29,7 +29,7 @@ export class Footer extends Component {
     return (
       <FooterContainer>
         <Container
-          home={this.props.Data.isHome || this.props.Data.isArchive}
+          archive={this.props.Data.isArchive}
           showSideBar={this.props.showSideBar}
         >
           <Logo>
@@ -61,7 +61,11 @@ export class Footer extends Component {
             </p>
             <ul>
               <li>
-                <Link link={"#"}>
+                <Link
+                  link={
+                    "https://www.facebook.com/Cano%C3%AB-Kayak-Plein-Air-de-CHAUNY-320627110626/"
+                  }
+                >
                   <FaFacebook />
                 </Link>
               </li>
@@ -133,10 +137,11 @@ const FooterContainer = styled.div`
   }
 `;
 const Container = styled.div`
-  width: ${(props) => (props.home && props.showSideBar ? "75%" : "100%")};
+  width: ${({ archive, showSideBar }) =>
+    archive && showSideBar ? "75%" : "100%"};
   display: grid;
-  grid-template-columns: ${(props) =>
-    props.home && props.showSideBar ? "1fr 1fr " : "1fr 1fr 1fr 1fr"};
+  grid-template-columns: ${({ archive, showSideBar }) =>
+    archive && showSideBar ? "1fr 1fr " : "1fr 1fr 1fr 1fr"};
   transition: all 0.3s;
   @media (max-width: 780px) {
     width: 100%;

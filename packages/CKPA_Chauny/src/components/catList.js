@@ -1,9 +1,9 @@
 import { connect, styled } from "frontity";
 import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 import Link from "@frontity/components/link";
-import React, { useState } from "react";
+import React from "react";
 
-const CatList = ({ state, showNavBar, showCaegories, handleshowDropMenu }) => {
+const CatList = ({ state, actions, showNavBar }) => {
   const categories = Object.values(state.source.category);
 
   return (
@@ -12,26 +12,29 @@ const CatList = ({ state, showNavBar, showCaegories, handleshowDropMenu }) => {
         <Button
           onClick={(e) => {
             e.stopPropagation();
-            handleshowDropMenu();
+            state.theme.isCategoriesMenuOpen
+              ? actions.theme.closeCategoriesMenu()
+              : actions.theme.openCategoriesMenu();
           }}
         >
           <span> Tous les categories</span>
-          {showCaegories ? (
+          {state.theme.isCategoriesMenuOpen ? (
             <RiArrowUpSLine className="icon" />
           ) : (
             <RiArrowDownSLine className="icon" />
           )}
         </Button>
 
-        <DropCatList navBarVisible={showNavBar} show={showCaegories}>
+        <DropCatList
+          navBarVisible={showNavBar}
+          show={state.theme.isCategoriesMenuOpen}
+        >
           <ul>
-            {categories.map((category) => {
+            {categories.map((category, index) => {
               return (
-                <Category key={category.ID}>
-                  <li key={category.ID}>
-                    <Link link={category.link}>{category.name}</Link>
-                  </li>
-                </Category>
+                <li key={index}>
+                  <Link link={category.link}>{category.name}</Link>
+                </li>
               );
             })}
           </ul>
@@ -44,7 +47,9 @@ const CatList = ({ state, showNavBar, showCaegories, handleshowDropMenu }) => {
 export default connect(CatList);
 
 const Wrapper = styled.div`
-  position: relative;
+  position: absolute;
+  right: 0;
+  bottom: 0;
   display: inline;
   color: black;
   background-color: white;
@@ -86,16 +91,14 @@ const DropCatList = styled.div`
       padding: 2px;
       margin: 2px 0;
     }
+    li a {
+      text-decoration: none;
+      color: black;
+    }
   }
 
   li:hover {
     transition: all 0.3s;
     background-color: var(--light-grey);
-  }
-`;
-const Category = styled.div`
-  li a {
-    text-decoration: none;
-    color: black;
   }
 `;

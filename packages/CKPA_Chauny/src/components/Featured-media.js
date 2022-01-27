@@ -15,6 +15,7 @@ import Image from "@frontity/components/image";
 const Featuredmedia = ({ state, id }) => {
   const media = state.source.attachment[id];
   const data = state.source.get(state.router.link);
+
   if (!media) return null;
 
   const srcset =
@@ -46,17 +47,16 @@ const Featuredmedia = ({ state, id }) => {
 export default connect(Featuredmedia);
 
 const Container = styled.div`
-  margin-top: 16px;
   height: ${({ Data }) =>
-  Data.isArchive ? "200px" : Data.isPost ? "auto" : "500px"};
+    Data.isArchive ? "200px" : Data.isPost ? "auto" : "500px"};
   width: ${({ Data }) => (Data.isArchive ? "200px" : "auto")};
   ${({ isAmp }) => isAmp && "position: relative;"};
 
-  @media(max-width:600px){
+  @media (max-width: 600px) {
     height: ${({ Data }) =>
-  Data.isArchive ? "200px" : Data.isPost ? "auto" : "400px"};
-  width: ${({ Data }) => (Data.isArchive ? "200px" : "auto")};
-  ${({ isAmp }) => isAmp && "position: relative;"};
+      Data.isArchive ? "200px" : Data.isPost ? "auto" : "400px"};
+    width: ${({ Data }) => (Data.isArchive ? "200px" : "auto")};
+    ${({ isAmp }) => isAmp && "position: relative;"};
   }
 `;
 

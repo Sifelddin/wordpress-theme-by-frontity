@@ -4,7 +4,7 @@ import Link from "@frontity/components/link";
 import { HiOutlineX } from "react-icons/hi";
 import { FaSearch } from "react-icons/fa";
 
-const SearchBar = ({ state, showSearchBar, handleSearchBarClick }) => {
+const SearchBar = ({ state, actions }) => {
   const categories = Object.values(state.source.category);
   const posts = Object.values(state.source.post);
   const [filtredData, setFiltredData] = useState([]);
@@ -29,16 +29,16 @@ const SearchBar = ({ state, showSearchBar, handleSearchBarClick }) => {
       inputElement.current.focus();
     }
     setFiltredData([]);
-  }, [showSearchBar]);
+  }, [state.theme.isSearchBarOpen]);
   // clear input value when closing the search bar
-  if (showSearchBar == false && inputElement.current !== null) {
+  if (!state.theme.isSearchBarOpen && inputElement.current !== null) {
     inputElement.current.value = "";
   }
 
   return (
     <>
       <SearchPopUp
-        showSearchBar={showSearchBar}
+        show={state.theme.isSearchBarOpen}
         onClick={(e) => e.stopPropagation()}
       >
         <SearchBarContainer>
@@ -52,7 +52,7 @@ const SearchBar = ({ state, showSearchBar, handleSearchBarClick }) => {
             <FaSearch />
           </button>
           <button className="closeBtn">
-            <HiOutlineX onClick={handleSearchBarClick} />
+            <HiOutlineX onClick={actions.theme.closeSearchBar} />
           </button>
         </SearchBarContainer>
         <Results>
@@ -61,11 +61,14 @@ const SearchBar = ({ state, showSearchBar, handleSearchBarClick }) => {
               {filtredData.slice(0, 10).map((value, index) => {
                 return (
                   <li key={index}>
-                    <Link link={value.link} onClick={handleSearchBarClick}>
+                    <Link
+                      link={value.link}
+                      onClick={actions.theme.closeSearchBar}
+                    >
                       <span className="search-type">
                         {value.type || "Category"}
                       </span>
-                      <SearchWord post={value.type}>
+                      <SearchWord is_post={value.type}>
                         {value.name || value.title.rendered.toLowerCase()}
                       </SearchWord>
                     </Link>
@@ -90,9 +93,11 @@ const SearchPopUp = styled.div`
   width: 600px;
   opacity: 1;
   color: black;
-  transition: ${(props) => (props.showSearchBar ? "all 0.3s" : "none")};
-  transform: ${(props) =>
-    props.showSearchBar ? "translateY(0)" : "translateY(-50px)"};
+  transition: ${({ show }) => (show ? "all 0.3s" : "none")};
+  transform: ${({ show }) => (show ? "translateY(0)" : "translateY(-50px)")};
+  @media (max-width: 650px) {
+    width: 90%;
+  }
 `;
 const SearchBarContainer = styled.div`
   position: relative;
@@ -111,6 +116,9 @@ const SearchBarContainer = styled.div`
     font-size: medium;
     border-radius: 5px;
     z-index: 10;
+    @media (max-width: 650px) {
+      font-size: small;
+    }
   }
   input:focus {
     outline: 1px solid blue;
@@ -119,7 +127,7 @@ const SearchBarContainer = styled.div`
     display: inline-flex;
     position: absolute;
     top: 50%;
-    left: 5%;
+    left: 1.5rem;
     transform: translateY(-50%);
     cursor: pointer;
     border: none;
@@ -130,7 +138,7 @@ const SearchBarContainer = styled.div`
     display: inline-flex;
     position: absolute;
     top: 50%;
-    right: 5%;
+    right: 1.2rem;
     transform: translateY(-50%);
     cursor: pointer;
     border: none;
@@ -145,6 +153,7 @@ const Results = styled.div`
   width: inherit;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
+  width: 100%;
 
   ul {
     list-style: none;
@@ -162,6 +171,9 @@ const Results = styled.div`
           border-right: 1px solid #121c4299;
           text-transform: capitalize;
         }
+        @media (max-width: 650px) {
+          font-size: small;
+        }
       }
     }
     li:hover {
@@ -172,5 +184,5 @@ const Results = styled.div`
 const SearchWord = styled.span`
   margin-left: 0.5rem;
   text-transform: capitalize;
-  font-weight: ${({ post }) => (post == "post" ? "initial" : "bolder")};
+  font-weight: ${({ is_post }) => (is_post == "post" ? "initial" : "bolder")};
 `;

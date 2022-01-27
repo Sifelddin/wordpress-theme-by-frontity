@@ -1,15 +1,30 @@
 import React from "react";
-import { connect } from "frontity";
+import { BiError } from "react-icons/bi";
+import { connect, styled } from "frontity";
 
 const Error = ({ state }) => {
   return (
-    <>
-      <h2>404 Error</h2>
+    <Content>
+      <div>
+        <h2>
+          404 Error
+          <BiError /> - Page introuvable
+        </h2>
+      </div>
       <p>
-        The path <em>{state.router.link}</em> cannot be found.
+        le chemin <strong>{state.router.link}</strong> est introuvable.
       </p>
-    </>
+    </Content>
   );
 };
 
 export default connect(Error);
+
+const Content = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: 70vh;
+`;

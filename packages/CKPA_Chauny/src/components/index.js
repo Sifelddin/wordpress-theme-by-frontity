@@ -1,26 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { connect, Global, css, styled, Head } from "frontity";
-import Link from "@frontity/components/link";
 import Switch from "@frontity/components/switch";
-import { FaSearch, FaAlignJustify, FaOutdent } from "react-icons/fa";
-import List from "./list";
+import { BsFillArrowUpCircleFill } from "react-icons/bs";
+import Archive from "./Archive";
 import Post from "./post";
 import Page from "./Page";
 import Loading from "./Loading";
 import Error from "./Error";
-import Nav from "./Nav";
+import NavBar from "./navigation/NavBar";
 import Footer from "./Footer";
-import CatPost from "./catPost";
 import SearchBar from "./SearchBar";
 import { useTransition, animated } from "react-spring";
 import Title from "./title";
 import CatList from "./catList";
 
-//import fetch from "cross-fetch";
-
-const Root = ({ state }) => {
+const Root = ({ state, actions }) => {
   const data = state.source.get(state.router.link);
   // const headtags = state.headTags.get("/nouveautes/");
+
   const transitions = useTransition(state.router.link, null, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
@@ -31,9 +28,6 @@ const Root = ({ state }) => {
   const [scrollTopValue, setScrollTopValue] = useState(0);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [showNavBar, setShowNavBar] = useState(true);
-  const [showSideBarList, setShowSideBarList] = useState(false);
-  const [showSearchBar, setShowSearchBar] = useState(false);
-  const [showDropMenu, setShowDropMenu] = useState(false);
 
   const scrollNavBar = () => {
     typeof window !== "undefined" ? setScrollTopValue(window.scrollY) : true;
@@ -45,98 +39,63 @@ const Root = ({ state }) => {
     return () => window.removeEventListener("scroll", scrollNavBar);
   }, [scrollTopValue]);
 
-  //handle list click
-
-  const handleListClick = () => {
-    showSideBarList ? setShowSideBarList(false) : setShowSideBarList(true);
-  };
-  const handleSearchBarClick = () => {
-    showSearchBar ? setShowSearchBar(false) : setShowSearchBar(true);
-  };
-  const handleshowDropMenu = () => {
-    showDropMenu ? setShowDropMenu(false) : setShowDropMenu(true);
-  };
-
   return (
     <>
       <Global styles={globalStyle} />
       <Title />
       <Head>
-        <html lang="en" />
+        <html lang="fr" />
         <meta
           charset="UTF-8"
           name="description"
-          content="Based on the Frontity step by step tutorial"
+          content="vous accueille tout l’été, le club est ouvert tous les après midi de 13h30 à 17h30. Nous accueillons les jeunes à partir de 8ans"
         />
       </Head>
       <div
         onClick={() => {
-          if (showDropMenu == true) {
-            setShowDropMenu(false);
+          if (state.theme.isMobileMenuOpen) {
+            actions.theme.closeMobileMenu();
+          }
+          if (state.theme.isCategoriesMenuOpen) {
+            actions.theme.closeCategoriesMenu();
           }
         }}
       >
         <Header showNavBar={showNavBar}>
-          <NavBar>
-            <h1>
-              <Link link="/">{state.frontity.name}</Link>
-            </h1>
-            <Nav />
-            <Icons>
-              <FaSearch
-                className="search-icon"
-                onClick={handleSearchBarClick}
-              />
-              {data.isArchive && (
-                <FaOutdent className="list-icon" onClick={handleListClick} />
-              )}
-            </Icons>
-          </NavBar>
-          <FaAlignJustify className="mobile-icon" />
+          <NavBar />
         </Header>
 
-        <Main Data={data}>
+        <Main searchBarVisible={state.theme.isSearchBarOpen} Data={data}>
           {transitions.map(({ props, key }) => (
             <animated.div style={props} key={key}>
-              <Banner Data={data} showSideBar={showSideBarList}>
-                <h1>CANOË KAYAK PLEIN AIR</h1>
-                <p>Ouvert toute l'année</p>
-                {data.isArchive && (
-                  <CatList
-                    handleshowDropMenu={handleshowDropMenu}
-                    showNavBar={showNavBar}
-                    showCaegories={showDropMenu}
-                  />
-                )}
-              </Banner>
+              {data.isError || (
+                <Banner Data={data} showSideBar={state.theme.isSideMenuOpen}>
+                  <h1 id="#top">CANOË KAYAK PLEIN AIR</h1>
+                  <p>Ouvert toute l'année</p>
+                  {data.isArchive && <CatList showNavBar={showNavBar} />}
+                </Banner>
+              )}
               <Switch>
-                <CatPost
-                  showSideBarList={showSideBarList}
-                  handleSideBarListClick={handleListClick}
-                  when={data.isHome}
-                />
                 <Loading when={data.isFetching} />
-                <List
-                  showSideBarList={showSideBarList}
-                  handleSideBarListClick={handleListClick}
-                  when={data.isArchive}
-                />
+                <Archive when={data.isArchive} />
                 <Post when={data.isPost} />
                 <Page when={data.isPage} />
                 <Error when={data.isError} />
               </Switch>
             </animated.div>
           ))}
+          {scrollTopValue > 500 && (
+            <a href="#top">
+              <BsFillArrowUpCircleFill className="arrow-up" />
+            </a>
+          )}
         </Main>
-        <Footer Data={data} showSideBar={showSideBarList} />
+        <Footer Data={data} showSideBar={state.theme.isSideMenuOpen} />
         <SearchBarBgContainer
-          showSearchBar={showSearchBar}
-          onClick={handleSearchBarClick}
+          show={state.theme.isSearchBarOpen}
+          onClick={actions.theme.closeSearchBar}
         >
-          <SearchBar
-            showSearchBar={showSearchBar}
-            handleSearchBarClick={handleSearchBarClick}
-          />
+          <SearchBar />
         </SearchBarBgContainer>
       </div>
     </>
@@ -150,71 +109,37 @@ const Header = styled.header`
   top: 0;
   left: 0;
   right: 0;
-  z-index: ${(props) => (props.showNavBar == false ? "-1" : "10")};
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.4);
+  z-index: ${({ showNavBar }) => (showNavBar ? "10" : "-1")};
   transition: all 0.3s;
-  transform: ${(props) =>
-    props.showNavBar == false ? "translateY(-100%)" : "none"};
+  transform: ${({ showNavBar }) => (showNavBar ? "none" : "translateY(-100%)")};
 `;
-const NavBar = styled.div`
-  background-color: var(--background-nav);
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  align-items: center;
-  padding: 0 2rem;
-  color: var(--light-grey);
-  h1 {
-    text-align: center;
-  }
-  h1 a {
-    grid-column: span 1;
-    text-align: center;
-    font-size: 1.4rem;
-    text-shadow: 0 1px 2px lightgrey;
-  }
 
-  @media (max-width: 780px) {
-    h1 a {
-      font-size: 1.2rem;
-    }
+const Banner = styled.div`
+  padding: 2rem;
+  position: relative;
+  @media (min-width: 1050px) {
+    transition: all 0.5s;
+    max-width: ${({ Data, showSideBar }) =>
+      Data.isArchive && showSideBar ? "75%" : "100%"};
   }
-  h1 a:hover {
-    transition: 0.3s color;
-    color: lightgrey;
-  }
-
-  a {
-    font-weight: 500;
-    text-decoration: none;
-    color: inherit;
-  }
-
-  @media (max-width: 700px) {
-    display: flex;
-  }
+  text-align: center;
 `;
 
 const Main = styled.main`
-  max-width: ${({ Data }) =>
-    Data.isPost
-      ? "80%"
-      : Data.isPage
-      ? "80%"
-      : Data.isArchive
-      ? "70%"
-      : "100%"};
+  max-width: ${({ Data }) => (Data.isArchive ? "70%" : "100%")};
   padding: 5rem 0;
   margin: 0 auto;
-
-  @media (max-width: 800px) {
-    max-width: ${({ Data }) =>
-      Data.isPost
-        ? "90%"
-        : Data.isPage
-        ? "90%"
-        : Data.isArchive
-        ? "90%"
-        : "100%"};
+  @media (max-width: 1220px) {
+    max-width: ${({ Data }) => Data.isArchive && "75%"};
   }
+  @media (max-width: 1150px) {
+    max-width: ${({ Data }) => Data.isArchive && "80%"};
+  }
+
+  /* @media (max-width: 800px) {
+    max-width: 90%;
+  } */
   h2 {
     margin: 0.5em 0;
   }
@@ -222,38 +147,32 @@ const Main = styled.main`
     line-height: 1.25em;
     margin-bottom: 0.75em;
   }
-`;
-const Banner = styled.div`
-  @media (min-width: 1050px) {
-    transition: all 0.5s;
-    max-width: ${({ Data, showSideBar }) =>
-      (Data.isHome || Data.isArchive) && showSideBar ? "75%" : "100%"};
+
+  .arrow-up {
+    position: fixed;
+    bottom: 3rem;
+    right: 2rem;
+    /* top: 85vh;
+    right: 5%; */
+    font-size: 2rem;
+    z-index: ${({ searchBarVisible }) => (searchBarVisible ? "-1" : "20")};
+    animation: bounce 2s ease-in-out infinite;
+    color: var(--background-nav);
+    background-color: white;
+    border-radius: 50%;
   }
-  text-align: center;
-`;
-const Icons = styled.div`
-  grid-column: span 1;
-  color: inherit;
-  display: flex;
-  justify-content: flex-end;
-  .search-icon {
-    margin: 0 0.5rem;
-    cursor: pointer;
-  }
-  .search-icon:hover {
-    color: white;
-  }
-  .list-icon {
-    margin-left: 1rem;
-    cursor: pointer;
-  }
-  .list-icon:hover {
-    color: white;
-    transition: all 0.5s;
-  }
-  @media (max-width: 700px) {
-    .list-icon {
-      display: none;
+
+  @keyframes bounce {
+    0% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.1);
+    }
+
+    100% {
+      transform: scale(1);
     }
   }
 `;
@@ -268,11 +187,10 @@ const SearchBarBgContainer = styled.div`
   left: 0;
   bottom: 0;
   z-index: 20;
-  transition: ${(props) =>
-    props.showSearchBar ? "all 0.3s ease-in-out" : "none"};
-  ${(props) =>
-    props.showSearchBar
-      ? "opacity : 1 ; pointer-events : visible; "
+  transition: ${({ show }) => (show ? "all 0.3s ease-in-out" : "none")};
+  ${({ show }) =>
+    show
+      ? "opacity : 1 ; pointer-events : auto;"
       : " opacity : 0; pointer-events: none; "};
 `;
 const globalStyle = css`
@@ -307,9 +225,9 @@ const globalStyle = css`
   h2,
   h3,
   h4 {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
   }
   p {
-    font-size: 0.8rem;
+    font-size: 1rem;
   }
 `;

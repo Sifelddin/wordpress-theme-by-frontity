@@ -1,5 +1,5 @@
 import React from "react";
-import { connect, styled, Head } from "frontity";
+import { connect, styled, Head, decode } from "frontity";
 import dayjs from "dayjs";
 import FeaturedMedia from "./Featured-media";
 
@@ -7,21 +7,20 @@ function Post({ state, libraries }) {
   const data = state.source.get(state.router.link);
   const post = state.source[data.type][data.id];
   const author = state.source.author[post.author];
-  const formattedDate = dayjs(post.date).format("DD MMMM YYYY");
+  const formattedDate = dayjs(post.date).format("DD/MM/YYYY");
   const Html2React = libraries.html2react.Component;
 
+  console.log(post);
   return (
     <>
       <Head>
-        <title>{post.title.rendered}</title>
-        <meta name="description" content={post.excerpt.rendered} />
+        <title>{decode(post.title.rendered)}</title>
+        <meta name="description" content={decode(post.excerpt.rendered)} />
       </Head>
       <PostContent>
-        <h2>{post.title.rendered}</h2>
+        <h2>{decode(post.title.rendered)}</h2>
         {/* Look at the settings to see if we should include the featured image */}
-        {state.theme.featured.showOnPost && (
-          <FeaturedMedia id={post.featured_media} />
-        )}
+        {<FeaturedMedia id={post.featured_media} />}
 
         {data.isAttachment ? (
           // If the post is an attachment, just render the description property,
@@ -39,12 +38,12 @@ function Post({ state, libraries }) {
         )}
         <PostInfo>
           <p>
-            <strong>Posted: </strong>
+            <strong>Date: </strong>
             {formattedDate}
           </p>
           <p>
-            <strong>Author: </strong>
-            {author.name}
+            <strong>Auteur: </strong>
+            {author && author.name}
           </p>
         </PostInfo>
       </PostContent>
@@ -63,7 +62,7 @@ const PostContent = styled.div`
     text-align: center;
   }
   @media (max-width: 870px) {
-    width: auto;
+    max-width: 94%;
   }
 `;
 const PostInfo = styled.div`
@@ -71,7 +70,6 @@ const PostInfo = styled.div`
   margin-bottom: 1em;
   padding: 0.5em;
   border-left: 4px solid lightseagreen;
-  font-size: 0.8em;
 
   & > p {
     margin: 0;
@@ -116,7 +114,10 @@ const Content = styled.div`
   }
 
   a {
-    color: rgb(31, 56, 197);
+    color: var(--sky);
+    text-decoration: none;
+  }
+  a:hover {
     text-decoration: underline;
   }
 

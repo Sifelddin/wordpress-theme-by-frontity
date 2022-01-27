@@ -3,7 +3,7 @@ const settings = {
   state: {
     frontity: {
       url: "https://CKPA-Chauny.fr",
-      title: "CANOË KAYAK PLEIN AIR",
+      title: "CKPA Chauny",
       description: "WordPress installation for Frontity development",
     },
   },
@@ -11,13 +11,7 @@ const settings = {
     {
       name: "CKPA_Chauny",
       state: {
-        theme: {
-          menu: [],
-          featured: {
-            showOnList: true,
-            showOnPost: true,
-          },
-        },
+        theme: {},
       },
     },
     {
@@ -25,6 +19,9 @@ const settings = {
       state: {
         source: {
           url: "http://localhost:80/",
+
+          homepage: "/accueil",
+          postsPage: "/actualites",
         },
       },
     },
@@ -36,3 +33,8 @@ const settings = {
 };
 
 export default settings;
+
+//  url: "https://remi-lfb.fr/"
+
+// homepage: "/accueil",
+// postsPage: "/actualites",

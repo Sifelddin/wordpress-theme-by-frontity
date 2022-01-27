@@ -3,37 +3,56 @@ import image from "@frontity/html2react/processors/image";
 import iframe from "@frontity/html2react/processors/iframe";
 import link from "@frontity/html2react/processors/link";
 import menuHandler from "./components/handlers/menu-handler";
-import { categoriesWidgetsHome } from "./components/config";
 
 export default {
-  name: "my-first-theme",
+  name: "CKPA_Chauny",
   roots: {
     theme: Root,
   },
   state: {
     theme: {
       autoPrefetch: "in-view",
-      menu: [],
       menuUrl: "header",
-      MenuVisible: false,
-      featured: {
-        showOnList: false,
-        showOnPost: false,
-      },
+      // State for the menu on mobile
+      isMobileMenuOpen: false,
+      isCategoriesMenuOpen: false,
+      isSideMenuOpen: false,
+      isSearchBarOpen: false,
+      isSlideVisible: false,
     },
   },
   actions: {
     theme: {
-      toggleMenu: ({ state }) => {
-        state.theme.MenuVisible = !state.theme.MenuVisible;
+      openMobileMenu: ({ state }) => {
+        state.theme.isMobileMenuOpen = true;
+      },
+      closeMobileMenu: ({ state }) => {
+        state.theme.isMobileMenuOpen = false;
+      },
+      openCategoriesMenu: ({ state }) => {
+        state.theme.isCategoriesMenuOpen = true;
+      },
+      closeCategoriesMenu: ({ state }) => {
+        state.theme.isCategoriesMenuOpen = false;
+      },
+      openSideMenu: ({ state }) => {
+        state.theme.isSideMenuOpen = true;
+      },
+      closeSideMenu: ({ state }) => {
+        state.theme.isSideMenuOpen = false;
+      },
+      openSearchBar: ({ state }) => {
+        state.theme.isSearchBarOpen = true;
+      },
+      closeSearchBar: ({ state }) => {
+        state.theme.isSearchBarOpen = false;
+      },
+      toggleGalery: ({ state }) => {
+        state.theme.isSlideVisible = !state.theme.isSlideVisible;
       },
       beforeSSR: async ({ state, actions }) => {
         await actions.source.fetch(`/menu/${state.theme.menuUrl}/`);
-        await Promise.all(
-          Object.keys(categoriesWidgetsHome).map((category) =>
-            actions.source.fetch(`/category/${category}/`)
-          )
-        );
+        await actions.source.fetch(`/actualites`);
       },
     },
   },
@@ -46,3 +65,5 @@ export default {
     },
   },
 };
+
+// menuUrl: "Navigation",

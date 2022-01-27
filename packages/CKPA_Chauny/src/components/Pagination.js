@@ -20,23 +20,20 @@ const Pagination = ({ state, actions }) => {
   }, []);
 
   return (
-    <div>
+    <Wrapper SideBarVisible={state.theme.isSideMenuOpen}>
       {/* If there's a next page, render this link */}
       {next && (
         <Link link={next}>
-          <Text>← posts précedents</Text>
+          <Text>←Articles précé</Text>
         </Link>
-      )}
-
-      {previous && next && " - "}
-
+      )}{" "}
       {/* If there's a previous page, render this link */}
       {previous && (
         <Link link={previous}>
-          <Text> posts suivants →</Text>
+          <Text>Articles suiv →</Text>
         </Link>
       )}
-    </div>
+    </Wrapper>
   );
 };
 
@@ -45,9 +42,18 @@ const Pagination = ({ state, actions }) => {
  * `state`, `actions`, `libraries` via props
  */
 export default connect(Pagination);
-
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  a {
+    font-size: ${({ SideBarVisible }) => SideBarVisible && "0.8rem"};
+    text-decoration: none;
+    scroll-behavior: auto;
+  }
+`;
 const Text = styled.em`
-  display: inline-block;
+  display: inline-flex;
   margin-top: 16px;
   color: black;
 `;
