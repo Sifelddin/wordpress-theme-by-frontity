@@ -10,28 +10,24 @@ function Post({ state, libraries }) {
   const formattedDate = dayjs(post.date).format("DD/MM/YYYY");
   const Html2React = libraries.html2react.Component;
 
-  console.log(post);
   return (
     <>
       <Head>
-        <title>{decode(post.title.rendered)}</title>
         <meta name="description" content={decode(post.excerpt.rendered)} />
       </Head>
+
       <PostContent>
-        <h2>{decode(post.title.rendered)}</h2>
-        {/* Look at the settings to see if we should include the featured image */}
+        <h1>{decode(post.title.rendered)}</h1>
+    
         {<FeaturedMedia id={post.featured_media} />}
 
         {data.isAttachment ? (
-          // If the post is an attachment, just render the description property,
-          // which already contains the thumbnail.
+          
           <div
             dangerouslySetInnerHTML={{ __html: post.description.rendered }}
           />
         ) : (
-          // Render the content using the Html2React component so the HTML is
-          // processed by the processors we included in the
-          // libraries.html2react.processors array.
+          
           <Content>
             <Html2React html={post.content.rendered} />
           </Content>
@@ -57,7 +53,7 @@ const PostContent = styled.div`
   width: 800px;
   margin: 0 auto;
   padding: 24px;
-  h2 {
+  h1 {
     font-size: 2rem;
     text-align: center;
   }

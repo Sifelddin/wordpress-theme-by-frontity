@@ -9,10 +9,10 @@ import {
   FaYoutube,
   FaBehance,
 } from "react-icons/fa";
-import { styled } from "frontity";
+import { connect, styled } from "frontity";
 import Link from "@frontity/components/link";
-import connect from "@frontity/connect";
 import dayjs from "dayjs";
+import Image from "@frontity/components/image";
 
 export class Footer extends Component {
   constructor(props) {
@@ -32,9 +32,8 @@ export class Footer extends Component {
           archive={this.props.Data.isArchive}
           showSideBar={this.props.showSideBar}
         >
-          <Logo>
-            <img src={imgLogo} alt="logo" />
-          </Logo>
+          <Logo src={imgLogo} alt="logo" />
+
           <ContactTextList>
             <h4>
               <Link link="/contact/">CONTACT</Link>
@@ -112,10 +111,9 @@ export class Footer extends Component {
 
 export default connect(Footer);
 
-const FooterContainer = styled.div`
+const FooterContainer = styled.footer`
   background-color: var(--background-nav);
   width: 100%;
-  /* background-color: #95a595; */
   color: lightgrey;
   padding: 2rem 1rem;
   z-index: 3;
@@ -140,6 +138,7 @@ const Container = styled.div`
   width: ${({ archive, showSideBar }) =>
     archive && showSideBar ? "75%" : "100%"};
   display: grid;
+  text-align: center;
   grid-template-columns: ${({ archive, showSideBar }) =>
     archive && showSideBar ? "1fr 1fr " : "1fr 1fr 1fr 1fr"};
   transition: all 0.3s;
@@ -148,19 +147,18 @@ const Container = styled.div`
     display: block;
   }
 `;
-const Logo = styled.div`
+const Logo = styled(Image)`
   padding: 0.5rem;
-  text-align: center;
+  margin: 0 auto;
 `;
+
 const CatList = styled.div`
   padding: 0.5rem;
   font-size: 0.8rem;
-  text-align: center;
   line-height: 1.3rem;
 `;
 
 const Icons = styled.div`
-  text-align: center;
   padding: 0.5rem;
   p {
     font-size: 0.8rem;
@@ -184,7 +182,6 @@ const Icons = styled.div`
 
 const ContactTextList = styled.div`
   padding: 0.5rem;
-  text-align: center;
   font-size: 0.8rem;
   line-height: 1.2rem;
   h4 {

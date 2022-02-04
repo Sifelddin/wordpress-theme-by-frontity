@@ -7,6 +7,7 @@ import Calendar from "react-calendar";
 const Page = ({ state, libraries, actions }) => {
   const data = state.source.get(state.router.link);
   const page = state.source[data.type][data.id];
+
   const Html2React = libraries.html2react.Component;
   const [current, setCurrent] = useState(0);
   const [value, setValue] = useState(new Date());
@@ -32,9 +33,9 @@ const Page = ({ state, libraries, actions }) => {
     return (
       <>
         <Head>
-          <title>{page.title.rendered}</title>
           <meta name="description" content={page.excerpt.rendered} />
         </Head>
+
         <SlideBackground
           show={state.theme.isSlideVisible}
           onClick={(e) => {
@@ -84,7 +85,6 @@ const Page = ({ state, libraries, actions }) => {
     return (
       <>
         <Head>
-          <title>{page.title.rendered}</title>
           <meta name="description" content={page.excerpt.rendered} />
         </Head>
         <PageContent home={data.isHome}>

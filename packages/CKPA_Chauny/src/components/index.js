@@ -16,7 +16,6 @@ import CatList from "./catList";
 
 const Root = ({ state, actions }) => {
   const data = state.source.get(state.router.link);
-  // const headtags = state.headTags.get("/nouveautes/");
 
   const transitions = useTransition(state.router.link, null, {
     from: { opacity: 0 },
@@ -42,15 +41,15 @@ const Root = ({ state, actions }) => {
   return (
     <>
       <Global styles={globalStyle} />
-      <Title />
       <Head>
         <html lang="fr" />
         <meta
           charset="UTF-8"
           name="description"
-          content="vous accueille tout l’été, le club est ouvert tous les après midi de 13h30 à 17h30. Nous accueillons les jeunes à partir de 8ans"
+          content={state.theme.description}
         />
       </Head>
+      <Title />
       <div
         onClick={() => {
           if (state.theme.isMobileMenuOpen) {

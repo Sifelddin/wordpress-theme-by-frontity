@@ -11,7 +11,10 @@ const settings = {
     {
       name: "CKPA_Chauny",
       state: {
-        theme: {},
+        theme: {
+          description:
+            "le club vous accueille tout l’été, le club est ouvert tous les après midi de 13h30 à 17h30. Nous accueillons les jeunes à partir de 8ans",
+        },
       },
     },
     {
@@ -19,7 +22,6 @@ const settings = {
       state: {
         source: {
           url: "http://localhost:80/",
-
           homepage: "/accueil",
           postsPage: "/actualites",
         },
@@ -28,7 +30,7 @@ const settings = {
     "@frontity/tiny-router",
     "@frontity/html2react",
     "@aamodtgroup/frontity-contact-form-7",
-    "@frontity/head-tags",
+    "@frontity/yoast",
   ],
 };
 
